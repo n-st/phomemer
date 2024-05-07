@@ -17,7 +17,7 @@ except:
 if os.path.isfile(img_file):
     img = Image.open(img_file)
 else:
-    img = Image.new("1", (384, 240), color=1)
+    img = Image.new("1", (384, 384), color=1)
     draw = ImageDraw.Draw(img)
     for size in range(100, 1, -1):
         font = ImageFont.truetype(
@@ -30,13 +30,10 @@ else:
 if img.height > img.width:
     img = img.transpose(Image.ROTATE_90)
 
-if 323 / img.width * img.height <= 240:
-    img = img.resize(size=(323, int(323 / img.width * img.height)))
-else:
-    img = img.resize(size=(int(240 / img.height * img.width), 240))
+img = img.resize(size=(384, 384))
 
-imgborder = Image.new("1", (384, 240), color=1)
-imgborder.paste(img, (61, 0))
+imgborder = Image.new("1", (384, 384), color=1)
+imgborder.paste(img, (0, 0))
 img = imgborder
 
 # -- print
@@ -62,10 +59,6 @@ ibuf = [b if b != 0x0A else 0x14 for b in ibuf]
 buf += ibuf
 
 # -- send
-
-with open("out.bin", "wb") as f:
-    f.write(bytes(buf))
-exit(1)
 
 sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
 sock.bind((socket.BDADDR_ANY, 1))
